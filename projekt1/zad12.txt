@@ -1,0 +1,190 @@
+from typing import Any
+
+import self as self
+
+
+class Node:
+    value: Any
+    next: 'Node'
+
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+
+class LinkedList:
+    head: Node
+    tail: Node
+
+    def __init__(self, node: Node = None):
+        self.head = node
+        self.tail = node
+
+    def __len__(self):
+        node = self.head
+        n = 0
+        while node != None:
+            n += 1
+            node = node.next
+        return n
+
+    # def __str__(self):
+    #     st = ""
+    #     node = self.head
+    #     for x in range(len(self)):
+    #         if node.next != None:
+    #             st += str(node.value) + " -> "
+    #         if node.next == None:
+    #             st += str(node.value)
+    #         node = node.next
+    #     return st
+
+    def push(self, value: Any)->None :
+        node = Node(value)
+        if (self.head == None):
+            self.head = node
+            self.tail = node
+        else:
+            tmp = self.head
+            self.head = node
+            node.next = tmp # sklejanie
+
+    def append(self, value: Any)->None:
+        node = Node(value)
+        if (self.tail == None):
+            self.head = node
+            self.tail = node
+        else:
+            self.tail.next = node
+            self.tail = node
+    def node(self, at: int)->Node:
+        tmp= self.head
+        while (at >0):
+            at= at -1 # warunek iterujacy od konca noda
+            if (tmp == None):
+                break
+            else:
+                tmp = tmp.next
+        return tmp
+    def insert(self, value: Any, after: Node ):
+        node = Node(value)
+        tmp = self.head
+        while(tmp != after):
+            if (tmp == None):
+                return
+            tmp = tmp.next
+        node.next = tmp.next # nowo stworzony node wskazuje na next node
+        tmp.next = node
+
+    def pop(self)->Any:
+        if (self.head == None):
+            return None
+        tmp = self.head
+        self.head = tmp.next
+        return tmp
+
+    def remove_last(self)->Any:
+        if (self.tail == None):
+            return None
+        else:
+            tmp = self.tail
+            self.tail = self.node(self.len()-2) # ogon naszej list = przedostatni element
+            self.node(self.len() - 2).next = None # mowimy ze ostatni element jest usuniety
+        return tmp
+
+    def len(self)->int:
+        tmp = self.head
+        n:int = 0
+        while (tmp != None):
+            tmp = tmp.next
+            n = n + 1
+        return n
+
+    def remove(self, after: Node)->Any:
+        tmp = self.head
+        while (tmp != after):
+            if (tmp == None):
+                return
+            tmp = tmp.next
+        if (tmp.next == None):
+            return
+        else:
+            tmp.next = tmp.next.next
+
+    def print(self)->None:
+        node = self.head
+        while(node != None):
+            print(node.value)
+            node = node.next # iteracja
+
+
+
+class Stack:
+
+    self._storage = None
+
+    def __init__(self):
+        self._storage = LinkedList()
+        self.stack = []
+
+    def __len__(self):
+        return len(self._storage)
+
+    def __str__(self):
+        st = ""
+        for x in range(len(self._storage)):
+            st += "|" + str(self._storage.node(x).value) + "|\n"
+
+    def push(self, value)-> None:
+        self._storage.push(value)
+
+    def pop(self)-> Any:
+        return self._storage.pop().value
+
+    def print(self)-> Any:
+        self._storage.print()
+
+
+
+stack = Stack()
+stack.push(2)
+stack.push(3)
+stack.push(5)
+stack.push(6)
+stack.push(7)
+stack.push(8)
+# stack.print()
+
+len(stack)
+# print("-----------")
+# print(stack.pop())
+# print("-----------")
+# stack.print()
+# list.print()
+# list.print()
+# list.append(22222)
+# list.append(33333)
+# list.print()
+# list.print()
+# print("KAPPA")
+# list.node(0)
+# list.print()
+# print(list.node(10).value)
+# list.node(1)
+# list.insert(99, list.head.next.next)
+# list.print()
+# print(list.pop().value)
+# list.print()
+# print(list.len())
+# list.remove_last()
+# list.print()
+# list.remove(list.head.next)
+# list.print()
+# list.print()
+# print(list.node(2).value)
+# list.insert(99, list.head.next.next.next)
+# list.print()
+# Stack.pop()
+# list.print()
+
