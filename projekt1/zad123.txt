@@ -105,7 +105,7 @@ class LinkedList:
             self.tail = self.node(self.len()-2) # ogon naszej list = przedostatni element
             self.node(self.len() - 2).next = None # mowimy ze ostatni element jest usuniety
         return tmp
-    # do remove_last
+    # do remove_last , mozna uzyc operatora __len__ zamiast len()
     def len(self)->int:
         tmp = self.head
         n:int = 0
