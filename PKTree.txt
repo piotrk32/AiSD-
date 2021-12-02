@@ -116,8 +116,8 @@ class Tree:
 
 
 
-def PioterPrint(pitersik: TreeNode )->None:
-    print(str(pitersik))
+def PiotrPrint(n: TreeNode )->None:
+    print(str(n))
 
 
 
@@ -141,9 +141,9 @@ tree.add(value = 10 ,parent_value= rootNode.children[1])
 tree.add(value = 11 ,parent_value= rootNode.children[2])
 tree.add(value = 12 ,parent_value= rootNode.children[2])
 
-# tree.for_each_deep_first(PioterPrint)
+# tree.for_each_deep_first(PiotrPrint)
 tree.show()
-# tree.for_each_level_order(PioterPrint)
+# tree.for_each_level_order(PiotrPrint)
 
 # print(tree.root.search(5))
 
