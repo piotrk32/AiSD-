@@ -1,0 +1,169 @@
+from typing import Any, List, Callable, Union
+from queue import *
+
+
+
+
+class TreeNode:
+    value : Any
+    children : List['TreeNode']
+    parent : 'TreeNode'
+
+
+    def __init__(self, value : Any, parent : 'TreeNode'):
+        self.value = value
+        self.children = []
+        self.parent = parent
+
+    def __str__(self):
+        return str(self.value)
+
+    def is_leaf(self)-> bool:
+        if(self.children == None):
+            return True
+        return False
+
+    def add(self, child: 'TreeNode')-> None:
+        self.children.append(child)
+        # child.parent = self
+
+    def for_each_deep_first(self, visit: Callable[['TreeNode'], None])-> None:
+        if (visit == None):
+            return
+        visit(self)
+        for child in self.children:
+            # if (child.visit == None):
+            #     return
+            child.for_each_deep_first(visit)
+
+
+
+
+    def for_each_level_order(self, visit: Callable[['TreeNode'], None])-> None:
+        q = Queue()
+        visit(self)
+        for c in self.children:
+            q.put(c)
+
+        while  not q.empty():
+            t = q.get()
+            # q.dequeue().value
+            visit(t)
+            for c in t.children:
+                q.put(c)
+
+    def node_lvl(self):
+        lvl = 0
+        parent = self.parent
+        while parent != None:
+            lvl += 1
+            parent = parent.parent
+        return lvl
+
+    def search(self, value: Any) -> bool:#Union['TreeNode', bool]:
+
+        q = Queue()
+        if(self.value == value):
+            return True
+        for c in self.children:
+            q.put(c)
+
+        while  not q.empty():
+            t = q.get()
+            # q.dequeue().value
+            if(t.value == value):
+                return True
+            for c in t.children:
+                q.put(c)
+        return False
+
+
+
+
+class Tree:
+    root : TreeNode
+
+
+    def __init__(self, root):
+        self.root = root
+
+    def add(self, value: Any, parent_value : 'TreeNode')->None:
+        newNode = TreeNode(value, parent_value) # tworzenie nowego noda
+        parent_value.add(newNode) #rodzic wie o dziecku
+
+
+    def show(self):
+        galezie = "|---|"
+
+        if type(self) is Tree:
+            print(self.root.value)
+            for c in self.root.children:
+
+                print(galezie * c.node_lvl() + str(c))
+                Tree.show(c)
+        if type(self) is TreeNode:
+            for c in self.children:
+                print(galezie * c.node_lvl() + str(c))
+                Tree.show(c)
+
+
+    def for_each_deep_first(self, visit: Callable[['TreeNode'], None])-> None:
+        self.root.for_each_deep_first(visit)
+
+    def for_each_level_order(self, visit: Callable[['TreeNode'], None])-> None:
+        self.root.for_each_level_order(visit)
+
+
+
+
+def PioterPrint(pitersik: TreeNode )->None:
+    print(str(pitersik))
+
+
+
+
+rootNode = TreeNode(value = 1, parent = None)
+
+tree = Tree(rootNode)
+tree.add(value = 2 ,parent_value= rootNode)
+tree.add(value = 3 ,parent_value= rootNode)
+tree.add(value = 4 ,parent_value= rootNode)
+
+tree.add(value = 7 ,parent_value= rootNode.children[0])
+tree.add(value = 8 ,parent_value= rootNode.children[0])
+
+tree.add(value = 5 ,parent_value= rootNode.children[0].children[0])
+tree.add(value = 6 ,parent_value= rootNode.children[0].children[0])
+
+
+tree.add(value = 9 ,parent_value= rootNode.children[1])
+tree.add(value = 10 ,parent_value= rootNode.children[1])
+tree.add(value = 11 ,parent_value= rootNode.children[2])
+tree.add(value = 12 ,parent_value= rootNode.children[2])
+
+# tree.for_each_deep_first(PioterPrint)
+tree.show()
+# tree.for_each_level_order(PioterPrint)
+
+# print(tree.root.search(5))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
