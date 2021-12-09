@@ -1,0 +1,171 @@
+from typing import Any, Callable, List
+
+
+class BinaryNode:
+    value: Any
+    left_child: 'BinaryNode'
+    right_child: 'BinaryNode'
+
+    def __init__(self, value: Any):
+        self.value = value
+        self.left_child = None
+        self.right_child = None
+
+    def __str__(self):
+        wynik = str(self.value)
+        return wynik
+
+    def is_leaf(self):
+        if (self.left_child is None and self.right_child is None):
+            return True
+        else:
+            return False
+
+    def add_left_child(self, value: Any):
+        self.left_child = value
+
+    def add_right_child(self, value: Any):
+        self.right_child = value
+
+    def traverse_in_order(self, visit: Callable[[Any], None]): # wypisuja sie lewe dzieci i wracaja do rodzica jesli nie ma wiecej
+
+        if (self.left_child is not None):
+            # First recur on left child
+            self.left_child.traverse_in_order(visit)
+
+        if (self is not None):
+            # then print the data of node
+            visit(self.value)
+
+        if (self.right_child is not None):
+            # now recur on right child
+            self.right_child.traverse_in_order(visit)
+
+    def traverse_post_order(self, visit: Callable[[Any], None]): # pierwszenstwo maja dzieci
+
+        if (self.left_child is not None):
+            # First recur on left child
+            self.left_child.traverse_post_order(visit)
+
+        if (self.right_child is not None):
+            # the recur on right child
+            self.right_child.traverse_post_order(visit)
+
+        if (self is not None):
+            # now print the data of node
+            visit(self.value)
+
+    def traverse_pre_order(self, visit: Callable[[Any], None]): # najpierw rodzic , lewe dziecko, prawe dziecko, lewe ma pierszenstwo
+
+        if (self is not None):
+            # First print the data of node
+
+            # print(self.left_child.value)
+            visit(self.value)
+
+            # Then recur on left child
+        if (self.left_child is not None):
+            self.left_child.traverse_pre_order(visit)
+
+            # Finally recur on right child
+        if (self.right_child is not None):
+            self.right_child.traverse_pre_order(visit)
+
+    def show(self, level=0):# pokolenia
+        if (self is not None):
+            if (self.left_child is not None):
+                self.left_child.show(level + 1)
+            print(' ' * 4 * level + '->', self.value)
+            if (self.right_child is not None):
+                self.right_child.show(level + 1)
+
+    def PrintNode(self):
+        str(print(self.value))
+
+
+class BinaryTree:
+    root: BinaryNode
+
+    def __init__(self, root):
+        self.root = root
+
+    def traverse_post_order(self, visit: Callable[[Any], None]):
+        self.root.traverse_post_order(visit)
+
+    def traverse_pre_order(self, visit: Callable[[Any], None]):
+        self.root.traverse_pre_order(visit)
+
+    def traverse_in_order(self, visit: Callable[[Any], None]):
+        self.root.traverse_in_order(visit)
+
+    def show(self):
+        self.root.show(level=0)
+
+
+def PiotrVisit(x: BinaryNode) -> None:
+    print(str(x))
+
+
+def bottom_line(tree: BinaryTree) -> List[BinaryNode]:
+
+    # kluczem jest horizontal distance , lewe dzicka daje -1, prawe +1, funkcja napisuje wartosci horizontal distance
+    # ktore sa takie same i te nowe trafiaja do bottom view, nody o najwiekszym lvl przyslaniaja
+    # poprzednie o takim samym horizontal distance
+    d = dict()
+    # value dicta jest node i jego lvl [][]
+
+    printBottomLine(tree.root, d, 0, 0)  # root to BinatryTree a root.root to prawdzowy root, argumenty node(korzen), dict
+    # horizontal distance oraz lvl
+
+
+# zamiana  na liste nodow
+    lista = []
+    for i in sorted(d.keys()):
+        lista.append(d[i][0]) # [i]- klucz(horizontal) [0] to pierwszy element value(node) [1] to lvl danego noda
+    return lista
+
+    #    print(d[i][0], end = " ")
+
+
+def printBottomLine(root, d, hd, level):
+
+    if root is None:
+        return
+
+    if hd in d:
+        if level >= d[hd][1]: #  jesli child ma ten sam horizontal distance i wiekszy lvl nadpisujemy dicta nim i jego lvlem(zastepuje przodka)
+            d[hd] = [root, level]
+    else:
+        d[hd] = [root, level]# nowy wpis do slownika jesli nie ma takiego horizontal distance wczesniej
+
+# preorder - sprawdzanie horizonal i lvl i wkladanie do mapy
+    printBottomLine(root.left_child, d, hd - 1,
+                        level + 1)
+
+    printBottomLine(root.right_child, d, hd + 1,
+                        level + 1)
+
+
+root = BinaryNode(1)
+root.left_child = BinaryNode(2)
+root.right_child = BinaryNode(3)
+root.left_child.left_child = BinaryNode(4)
+root.left_child.right_child = BinaryNode(5)
+root.left_child.right_child.right_child = BinaryNode(6)
+root.right_child.right_child = BinaryNode(7)
+# # print(root.left.left.value)
+# root.traverse_post_order(PiotrVisit)
+
+binarytree = BinaryTree(root)
+
+# binarytree.traverse_pre_order(PiotrVisit)
+
+binarytree.show()
+
+cos = bottom_line(binarytree)
+for i in cos:
+    print(i.value, end=" ")
+
+# root.add_left_child(2)
+# root.add_right_child(2)
+# root.add_left_child(2)
