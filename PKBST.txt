@@ -1,0 +1,219 @@
+
+
+from typing import Any, List
+
+class BinaryNode:
+    value: Any
+    left_child: 'BinaryNode'
+    right_child: 'BinaryNode'
+
+    def __init__(self, value):
+        self.value = value
+        self.left_child = None
+        self.right_child = None
+
+    # def min(self) -> 'BinaryNode':
+    #     if self.left_child:
+    #         print("KAPPA1")
+    #         self.left_child.min()
+    #     else:
+    #         print(self.value)
+    #         print("KAPPA2")
+    #         return self
+
+    def min(self)-> 'BinaryNode':
+        current= self
+        while(current.left_child is not None):
+            current = current.left_child
+        return current
+
+    def display(self):
+        lines, *_ = self._display_aux()
+        for line in lines:
+            print(line)
+
+    def _display_aux(self):
+        """Returns list of strings, width, height, and horizontal coordinate of the root."""
+        # No child.
+        if self.right_child is None and self.left_child is None:
+            line = '%s' % self.value
+            width = len(line)
+            height = 1
+            middle = width // 2
+            return [line], width, height, middle
+
+        # Only left child.
+        if self.right_child is None:
+            lines, n, p, x = self.left_child._display_aux()
+            s = '%s' % self.value
+            u = len(s)
+            first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
+            second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
+            shifted_lines = [line + u * ' ' for line in lines]
+            return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
+
+        # Only right child.
+        if self.left_child is None:
+            lines, n, p, x = self.right_child._display_aux()
+            s = '%s' % self.value
+            u = len(s)
+            first_line = s + x * '_' + (n - x) * ' '
+            second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
+            shifted_lines = [u * ' ' + line for line in lines]
+            return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
+
+        # Two children.
+        left, n, p, x = self.left_child._display_aux()
+        right, m, q, y = self.right_child._display_aux()
+        s = '%s' % self.value
+        u = len(s)
+        first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
+        second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
+        if p < q:
+            left += [n * ' '] * (q - p)
+        elif q < p:
+            right += [m * ' '] * (p - q)
+        zipped_lines = zip(left, right)
+        lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
+        return lines, n + m + u, max(p, q) + 2, n + u // 2
+
+
+class BinarySearchTree:
+    root: BinaryNode
+
+    def __init__(self, root):
+        self.root = root
+
+    def insert(self, value: Any) -> None:
+        self.root = self._insert(self.root, value)
+
+    def _insert(self, node: BinaryNode, value: Any) -> BinaryNode:
+        if value < node.value:
+            print(node.value)
+            print("KAPPA")
+            if node.left_child != None:
+                print("KAPPA")
+                self._insert(node.left_child, value)
+            else:
+                node.left_child = BinaryNode(value)
+        else:
+            if node.right_child != None:
+                self._insert(node.right_child, value)
+            else:
+                node.right_child = BinaryNode(value)
+
+        return node
+
+    def insertlist(self, list: List[Any]) -> None:
+        for i in List:
+            self.insert(i.value)
+
+    def contains(self, value: Any, node: BinaryNode) -> bool:
+        print(value)
+        print(node.value)
+
+        print("KAPPA")
+        if value < node.value:
+            print("KAPPA1")
+            if node.left_child is not None:
+                print("KAPPA2")
+                return self.contains(value, node.left_child)
+            else:
+                return False
+        if value > node.value:
+            print("KAPPA3")
+            if node.right_child is None:
+                print("KAPPA4")
+                return False
+            else:
+                return self.contains(value, node.right_child)
+        # return False
+        if value == node.value:
+            print("KAPPAPA")
+            return True
+
+
+
+    def remove(self, value: Any) -> None:
+        self.root = self._remove(self.root, value)
+
+    def _remove(self, node: BinaryNode, value: Any) -> BinaryNode:
+        print(node.value)
+        if value == node.value:
+            print("KAPPA1")
+            if not node.right_child and not node.left_child:
+                print("KAPPA2")
+                return None
+
+            if not node.left_child:
+                print("KAPPA3")
+                return node.right_child
+
+            if not node.right_child:
+                print("KAPPA4")
+                return node.left_child
+            print("KAPPA5")
+
+            tmpnode = node.right_child.min() # znalezienie najmniejszego syna swojego najwiekszego syna
+            node.value = tmpnode.value # PODMIANA wartosci z tego co znalazlem
+
+            print("KAPPA99")
+            print(node.value)
+            node.right_child = self._remove(node.right_child, tmpnode.value)# rekurencyjnie usuwanie dziecko ktore znalezismy
+        elif (value < node.value):                                             # usuwanie tmpnode.value
+            print("KAPPA 6")
+            node.left_child = self._remove(node.left_child, value)
+        else:# <=
+
+            print("KAPPA 7")
+            node.right_child = self._remove(node.right_child, value)
+        return node
+
+
+
+
+
+
+        #     return node.right_child.min()
+        # else:
+        #     return None
+        # if value < node.value:
+        #     node.left_child = self._remove(node.left_child, value)
+        #
+        # if value > node.value:
+        #     node.right_child = self._remove(node.right_child, value)
+
+
+
+    def show(self, node: BinaryNode, level=0):
+        if (self is not None):
+            if (node.left_child is not None):
+                self.show(node.left_child, level + 1)
+            print(' ' * 4 * level + '->', node.value )
+            if (node.right_child is not None):
+                self.show(node.right_child, level + 1)
+
+    def PrintNode(self, node: BinaryNode):
+        str(print(node.value))
+
+bn = BinarySearchTree(BinaryNode(5))
+bn.insert(value = 2)
+bn.insert(value = 9)
+bn.insert(value = 4)
+bn.insert(value = 3)
+bn.insert(value = 6)
+bn.insert(value = 1)
+bn.insert(value = 8)
+# bn.show(bn.root)
+
+
+# bn.show(bn.root)
+bn.root.display()
+bn.remove(2)
+bn.root.display()
+# print(bn.root.right_child.right_child.right_child.min().value)
+# print(bn.contains(99, bn.root))
+
+
+
+
